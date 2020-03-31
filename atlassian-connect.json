@@ -1,9 +1,9 @@
     {
       "key": "confluence-helloworld-addon",
-      "name": "Hello World",
+      "name": "My AWS Widget",
       "description": "My very first add-on",
       "vendor": {
-        "name": "Angry Nerds",
+        "name": "Yanhui Li",
         "url": "https://www.atlassian.com/angrynerds"
       },
       "baseUrl": "{{localBaseUrl}}",
@@ -34,7 +34,14 @@
             "outputType": "block",
             "bodyType": "none"
           }
-        ]
+        ],
+        "configurePage": {
+          "url": "/my-config-page",
+          "name": {
+            "value": "My Configure Page"
+          },
+          "key": "my-config-page"
+        }
       }
     }
 

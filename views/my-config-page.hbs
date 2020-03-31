@@ -1,0 +1,78 @@
+{{!< layout}}
+
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.410.0.min.js"></script>
+<script type="text/javascript">
+
+AP.request('/rest/atlassian-connect/1/addons/confluence-helloworld-addon/properties/aws-credentials?jsonValue=true', {
+  success: function(response){
+    console.log(response);
+  },
+  error: function(error){
+    console.log(error);
+  }
+});
+
+function testConnection() {
+  const accessKey = document.getElementById('accessKey').value;
+  const secretKey = document.getElementById('secretKey').value;
+
+  AWS.config.region = 'ap-southeast-2'; 
+  AWS.config.credentials = new AWS.Credentials(accessKey, secretKey);
+  
+  var ec2 = new AWS.EC2();
+  ec2.describeInstances({}, function(err, data) {
+    if (err) {
+      console.log(err, err.stack);
+      alert('Failed');
+    }
+    else {
+      console.log(data);
+      const instances = data.Reservations.flatMap(r => r.Instances.map(i => `${i.InstanceId}: ${i.State.Name}`));
+      console.log(instances);
+      alert('Succeeded');
+    }
+  });
+}
+
+function saveCredentials() {
+  const accessKey = document.getElementById('accessKey').value;
+  const secretKey = document.getElementById('secretKey').value;
+  const credentials = {accessKey, secretKey};
+
+  AP.request('/rest/atlassian-connect/1/addons/confluence-helloworld-addon/properties/aws-credentials', {
+    type: 'PUT',
+    contentType: 'application/json',
+    data: JSON.stringify(credentials),
+    success: function(response){
+      console.log(response);
+    },
+    error: function(error){
+      console.log(error);
+    }
+  });
+}
+
+</script>
+<style>
+.block {
+  margin: 15px;
+}
+.button {
+  width: 100px;
+}
+</style>
+
+<div class="block">
+  <label for="accessKey">Access Key:</label>
+  <input type="text" id="accessKey" name="accessKey">
+</div>
+
+<div class="block">
+  <label for="accessKey">Secret Key:</label>
+  <input type="text" id="secretKey" name="secretKey">
+</div>
+
+<div class="block">
+  <button class="button" onclick="testConnection()">Test</button>
+  <button class="button" onclick="saveCredentials()">Save</button>
+</div>

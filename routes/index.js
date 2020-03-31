@@ -25,6 +25,13 @@ module.exports = function (app, addon) {
         }
     );
 
+    app.get('/my-config-page', addon.authenticate(), function (req, res) {
+            res.render('my-config-page', {
+                title: 'my-config-page'
+            });
+        }
+    );
+
     // Add any additional route handlers you need for views or REST resources here...
 
     // load any additional files you have in routes and apply those to the app
